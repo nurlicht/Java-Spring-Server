@@ -9,20 +9,22 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.demo.kafka.KafkaPublisher;
 import com.example.demo.model.Book;
 import com.example.demo.repository.BookRepository;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.log4j.Log4j2;
 
-@RestController
 @RequiredArgsConstructor
+@RestController
 @RequestMapping("/api/")
-@Log4j2
 public class BookController {
 
     @Autowired
     private final BookRepository repository;
+
+    @Autowired
+    private final KafkaPublisher kafkaPublisher;
 
     @GetMapping("books")
     public List<Book> get() {
@@ -31,8 +33,10 @@ public class BookController {
 
     @PostMapping("book")
     public Book post(@RequestBody final Book book) {
-        log.info("Payload={}.", book);
-        return repository.save(book);
+        kafkaPublisher.send(book);
+        final Book persistedBook = repository.save(book);
+        kafkaPublisher.send(persistedBook);
+        return persistedBook;
     }
 
 }
