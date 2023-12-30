@@ -1,17 +1,18 @@
 # Web Application with Containerized Infrastructure
 - Language: Java
 - Framework: Spring
-- Infrastructure: Postgresql database, (docker-compose)
+- Infrastructure: [Postgresql](https://www.postgresql.org/) (database) and [Apache Kafka](https://kafka.apache.org/) (streaming platform)
 
 ### Dependencies
-- Java 21
+- Java 21 (for Java 17, change the setting in [the build script](./demo/pom.xml))
 - Apache Maven 3.6.0
 
 ### Execution
-1. Launch 4 terminals (CLI):
+1. Launch 5 terminals (CLI):
     - For the containerized infrastructure
     - For the Java-Spring application
-    - For an API client (CURL commands)
+    - For a client of the OpenAI API (CURL commands)
+    - For a client of the own API (CURL commands)
     - For an independent Kafka subscriber
 2. Start [DockerDesktop](https://www.docker.com/products/docker-desktop/).
 3. Start the infrastructure (Postgresql):
