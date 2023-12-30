@@ -34,7 +34,7 @@
     - ```psql -U compose-postgres -c '\x' -c 'SELECT * FROM book;'```
 2. Use the API to create new database entries or fetch existing entries:
     - ```curl -X GET   localhost:8080/api/books```
-    - ```curl -X POST "localhost:8080/api/book" -H "Content-Type: application/json" -d "{\"name\":\"name0\", \"publisher\":\"publisher0\", \"isbn\":\"isbn0\", \"language\":\"language0\", \"authors\":[\"author0a\", \"author0b\"]}"```
+    - ```curl -X POST "localhost:8080/api/book" -H "X-API-KEY: X-API-VALUE" -H "Content-Type: application/json" -d "{\"name\":\"name0\", \"publisher\":\"publisher0\", \"isbn\":\"isbn0\", \"language\":\"language0\", \"authors\":[\"author0a\", \"author0b\"]}"```
         - Replace <i>name0</i> and other values with appropriate ones.
 
 ### Tests (kafka)
