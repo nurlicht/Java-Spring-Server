@@ -24,10 +24,15 @@
 4. Build and start the Spring project:
     - ```mvn -f ./demo clean package```
     - ```java -jar ./demo/target\demo-0.0.1-SNAPSHOT.jar```
-5. At the very end (completion of development and tests):
-    - Stop (and delete) the containers.
-    - Exit DockerDesktop.
-    - Run the command ```wsl --shutdown```
+
+### Tests (AI)
+1. Get an OpenAI API-key from [here](https://platform.openai.com/api-keys).
+2. Use this API-key to set the corresponding property in [application.properties](./demo/src/main/resources/application.properties).
+3. Have the OpenAI API (ChatGPT) generate responses for your prompts:
+    - ```curl -X POST "localhost:8080/api/ai/chat" -H "X-API-KEY: X-API-VALUE" -d "Where is the capital of South Africa"```
+        - Possible errors
+            - 401 Unauthorized (invalid or no API-key) 
+            - 429 Too Many Requests (valid API-key with insufficient credit) 
 
 ### Tests (database)
 1. Use CLI of the db container to query the database content directly:
@@ -41,9 +46,14 @@
 1. Start an independent (CLI) subscriber to the published topic and monitor the logs:
     - ```docker exec -it broker /bin/sh```
     - ```/bin/kafka-console-consumer --topic book --from-beginning --bootstrap-server localhost:9092```
-2. Monitor published messages in Spring logs:
+2. Monitor published messages in Spring logs (triggered by the ```POST /book``` endpoint):
     - ```... com.example.demo.kafka.KafkaPublisher    : Sending value=Book(id=null, name=name0, publisher=publisher0, isbn=isbn0, language=language0, authors=[author0a, author0b]) ...```
     - ```... com.example.demo.kafka.KafkaPublisher    : Sending value=Book(id=null, name=name0, publisher=publisher0, isbn=isbn0, language=language0, authors=[author0a, author0b]) was completed.```
     - ```... com.example.demo.kafka.KafkaPublisher    : Sending value=Book(id=..., name=name0, publisher=publisher0, isbn=isbn0, language=language0, authors=[author0a, author0b]) ...```
     - ```... com.example.demo.kafka.KafkaPublisher    : Sending value=Book(id=..., name=name0, publisher=publisher0, isbn=isbn0, language=language0, authors=[author0a, author0b]) was completed.```
     - ```... com.example.demo.kafka.KafkaSubscriber   : Received value={"id":...,"name":"name0","publisher":"publisher0","isbn":"isbn0","language":"language0","authors":["author0a","author0b"]}.```
+
+### Cleanup (at the very end and after all tests)
+1. Stop (and delete) the containers.
+2. Exit DockerDesktop.
+3. Run the command ```wsl --shutdown```
