@@ -1,5 +1,7 @@
 package com.example.demo.security;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -11,7 +13,11 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @Configuration
 @EnableWebSecurity
+@ConfigurationPropertiesScan
 public class Config {
+
+    @Value("${api.key.encrypted}")
+    private String apiKeyEncrypted;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
@@ -20,7 +26,7 @@ public class Config {
             .authorizeHttpRequests(x -> x.requestMatchers("/api/**").authenticated())
             .httpBasic(x -> x.authenticationEntryPoint((req, res, exc) -> {}))
             .sessionManagement(x -> x.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-            .addFilterBefore(new CustomFilterBean(), UsernamePasswordAuthenticationFilter.class);
+            .addFilterBefore(new CustomFilterBean(apiKeyEncrypted), UsernamePasswordAuthenticationFilter.class);
         return httpSecurity.build();
     }
 

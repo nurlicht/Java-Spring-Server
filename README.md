@@ -30,7 +30,7 @@
 1. Get an OpenAI API-key from [here](https://platform.openai.com/api-keys).
 2. Use this API-key to set the corresponding property in [application.properties](./src/main/resources/application.properties).
 3. Have the OpenAI API (ChatGPT) generate responses for your prompts:
-    - ```curl -X POST "localhost:8080/api/ai/chat" -H "X-API-KEY: X-API-VALUE" -d "Where is the capital of South Africa"```
+    - ```curl -X POST "localhost:8080/api/ai/chat" -H "X-API-KEY: API-KEY-RAW" -d "Where is the capital of South Africa"```
         - Possible errors
             - 401 Unauthorized (invalid or no API-key) 
             - 429 Too Many Requests (valid API-key with insufficient credit) 
@@ -40,7 +40,7 @@
     - ```psql -U compose-postgres -c '\x' -c 'SELECT * FROM book;'```
 2. Use the API to create new database entries or fetch existing entries:
     - ```curl -X GET   localhost:8080/api/books```
-    - ```curl -X POST "localhost:8080/api/book" -H "X-API-KEY: X-API-VALUE" -H "Content-Type: application/json" -d "{\"name\":\"name0\", \"publisher\":\"publisher0\", \"isbn\":\"isbn0\", \"language\":\"language0\", \"authors\":[\"author0a\", \"author0b\"]}"```
+    - ```curl -X POST "localhost:8080/api/book" -H "X-API-KEY: API-KEY-RAW" -H "Content-Type: application/json" -d "{\"name\":\"name0\", \"publisher\":\"publisher0\", \"isbn\":\"isbn0\", \"language\":\"language0\", \"authors\":[\"author0a\", \"author0b\"]}"```
         - Replace <i>name0</i> and other values with appropriate ones.
 
 ### Tests (kafka)
