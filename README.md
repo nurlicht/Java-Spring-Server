@@ -4,7 +4,7 @@
 - Infrastructure: [Postgresql](https://www.postgresql.org/) (database) and [Apache Kafka](https://kafka.apache.org/) (streaming platform)
 
 ### Dependencies
-- Java 21 (for Java 17, change the setting in [the build script](./demo/pom.xml))
+- Java 21 (for Java 17, change the setting in [the build script](./pom.xml))
 - Apache Maven 3.6.0
 
 ### Execution
@@ -23,12 +23,12 @@
         - ...
         - ```database system is ready to accept connections```
 4. Build and start the Spring project:
-    - ```mvn -f ./demo clean package```
-    - ```java -jar ./demo/target\demo-0.0.1-SNAPSHOT.jar```
+    - ```mvn clean package```
+    - ```java -jar ./target\demo-0.0.1-SNAPSHOT.jar```
 
 ### Tests (AI)
 1. Get an OpenAI API-key from [here](https://platform.openai.com/api-keys).
-2. Use this API-key to set the corresponding property in [application.properties](./demo/src/main/resources/application.properties).
+2. Use this API-key to set the corresponding property in [application.properties](./src/main/resources/application.properties).
 3. Have the OpenAI API (ChatGPT) generate responses for your prompts:
     - ```curl -X POST "localhost:8080/api/ai/chat" -H "X-API-KEY: X-API-VALUE" -d "Where is the capital of South Africa"```
         - Possible errors
@@ -55,6 +55,7 @@
     - ```... com.example.demo.kafka.KafkaSubscriber   : Received value={"id":...,"name":"name0","publisher":"publisher0","isbn":"isbn0","language":"language0","authors":["author0a","author0b"]}.```
 
 ### Cleanup (at the very end and after all tests)
-1. Stop (and delete) the containers.
-2. Exit DockerDesktop.
-3. Run the command ```wsl --shutdown```
+1. Stop and delete the containers.
+2. Run the command ```docker system prune --volumes --force```
+3. Exit DockerDesktop.
+4. Run the command ```wsl --shutdown```
