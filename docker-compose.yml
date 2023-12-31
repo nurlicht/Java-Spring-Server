@@ -1,0 +1,95 @@
+version: '3'
+
+services:
+  zookeeper:
+    image: confluentinc/cp-zookeeper:latest
+    container_name: zookeeper
+    environment:
+      ZOOKEEPER_SERVER_ID: 1
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    ports:
+      - "22181:2181"
+    networks:
+      - docker-kafka-zookeeper-network
+
+  kafka:
+    image: confluentinc/cp-kafka:latest
+    container_name: kafka
+    ports:
+      - "9092:9092"
+    depends_on:
+      - zookeeper
+    healthcheck:
+      test: ["CMD-SHELL", "/bin/kafka-topics --list --bootstrap-server localhost:9092"]
+      interval: 5s
+      timeout: 2s
+      retries: 10
+      start_period: 0s
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+    networks:
+      - docker-kafka-app-network
+      - docker-kafka-zookeeper-network
+      
+  db:
+    image: postgres:13.1-alpine
+    container_name: db
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "psql -U compose-postgres -c '\\x' -c '\\dt+;'"]
+      interval: 5s
+      timeout: 2s
+      retries: 10
+      start_period: 0s
+    environment:
+      POSTGRES_USER: compose-postgres
+      POSTGRES_PASSWORD: compose-postgres-password
+    networks:
+      - docker-postgresql-network
+
+  spring-app:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    image: spring-app:v0.0.1
+    ports:
+      - "8080:8080"
+    depends_on:
+      db:
+        condition: service_healthy
+      kafka:
+        condition: service_healthy
+    healthcheck:
+      test: ['CMD-SHELL', 'curl -X POST "localhost:8080/api/book" -H "X-API-KEY: API-KEY-RAW" -H "Content-Type: application/json" -d "{\"name\":\"name0\", \"publisher\":\"publisher0\", \"isbn\":\"isbn0\", \"language\":\"language0\", \"authors\":[\"author0a\", \"author0b\"]}"']
+      interval: 5s
+      timeout: 2s
+      retries: 10
+      start_period: 0s
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/compose-postgres
+      - SPRING_DATASOURCE_USERNAME=compose-postgres
+      - SPRING_DATASOURCE_PASSWORD=compose-postgres-password
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+      - KAFKA_BOOTSTRAP_SERVERS=kafka:9092
+    networks:
+      - docker-postgresql-network
+      - docker-kafka-app-network
+
+networks:
+  docker-kafka-app-network:
+    driver: bridge
+  docker-kafka-zookeeper-network:
+    driver: bridge
+  docker-postgresql-network:
+    driver: bridge

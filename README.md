@@ -3,11 +3,17 @@
 - Framework: Spring
 - Infrastructure: [Postgresql](https://www.postgresql.org/) (database) and [Apache Kafka](https://kafka.apache.org/) (streaming platform)
 
-### Dependencies
-- Java 21 (for Java 17, change the setting in [the build script](./pom.xml))
-- Apache Maven 3.6.0
+### Modes of Operation
+1. Complete containerization (infrastructure and Spring-app)
+    - Relevant docker-compose file: [docker-compose.yml](./docker-compose.yml)
+2. Containerization of the infrastructure + local execution of the Spring-app
+    - Relevant docker-compose file: [docker-compose-infrastructure.yml](./docker-compose-infrastructure.yml)
 
-### Execution
+### Dependencies (only for local execution)
+    - Java 21 (for Java 17, change the setting in [the build script](./pom.xml))
+    - Apache Maven 3.6.0
+
+### Execution (local)
 1. Launch 5 terminals (CLI):
     - For the containerized infrastructure
     - For the Java-Spring application
@@ -25,6 +31,17 @@
 4. Build and start the Spring project:
     - ```mvn clean package```
     - ```java -jar ./target\demo-0.0.1-SNAPSHOT.jar```
+
+### Execution (complete containerization)
+1. Launch 5 terminals (CLI):
+    - For the containerized infrastructure
+    - For the Java-Spring application
+    - For a client of the OpenAI API (CURL commands)
+    - For a client of the own API (CURL commands)
+    - For an independent Kafka subscriber
+2. Start [DockerDesktop](https://www.docker.com/products/docker-desktop/).
+3. Start the infrastructure (Postgresql):
+    - ```docker-compose up```
 
 ### Tests (AI)
 1. Get an OpenAI API-key from [here](https://platform.openai.com/api-keys).
@@ -59,3 +76,6 @@
 2. Run the command ```docker system prune --volumes --force```
 3. Exit DockerDesktop.
 4. Run the command ```wsl --shutdown```
+
+### Notes
+- The tests mentioned above have been used in the docker-compose files for health-check upon starting services. 
