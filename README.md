@@ -1,7 +1,16 @@
 # Web Application with Containerized Infrastructure
-- Language: Java
-- Framework: Spring
+
+### Goal
+Configuration and minimal code for a containerized web-app
+
+### Main features
+- Language: [Java](https://jdk.java.net/21/)
+- Framework: [Spring](https://spring.io/) (AI, Compose, Security, Kafka, MVC, Data)
 - Infrastructure: [Postgresql](https://www.postgresql.org/) (database) and [Apache Kafka](https://kafka.apache.org/) (streaming platform)
+- No service layer (delegation of HTTP calls to the persistence layer or other clients)
+    - Several end-to-end tests (instead of unit- or integration-tests)
+        - Enforcing tests as health-check tests of [containers](./docker-compose.yml)
+        - Automatic start of containers with a [GitHub-Action](./.github/workflows/docker-compose.yml).
 
 ### Modes of Operation
 1. Complete containerization (infrastructure and Spring-app)
@@ -20,15 +29,16 @@
     - For a client of the OpenAI API (CURL commands)
     - For a client of the own API (CURL commands)
     - For an independent Kafka subscriber
-2. Start [DockerDesktop](https://www.docker.com/products/docker-desktop/).
-3. Start the infrastructure (Postgresql):
+2. Set ```spring.kafka.bootstrap-servers=localhost:9092``` in [application.properties](./src/main/resources/application.properties)
+3. Start [DockerDesktop](https://www.docker.com/products/docker-desktop/).
+4. Start the infrastructure (Postgresql):
     - ```docker-compose -f docker-compose-infrastructure.yml up```
     - Verify the correct start of the database. The log should show:
         - ...
         - ```listening on IPv4 address "0.0.0.0", port 5432```
         - ...
         - ```database system is ready to accept connections```
-4. Build and start the Spring project:
+5. Build and start the Spring project:
     - ```mvn clean package```
     - ```java -jar ./target\demo-0.0.1-SNAPSHOT.jar```
 
