@@ -1,4 +1,4 @@
-name: Java-Spring CI with Maven (Apache-Kafka and Postgresql)
+name: Java-Spring CI with Maven (Apache-Kafka/Postgresql)
 
 on:
   push:
