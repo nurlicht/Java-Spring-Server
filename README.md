@@ -1,4 +1,4 @@
-# Containerized Web App # Containerized Web App [![](https://github.com/nurlicht/Java-Spring-Server/actions/workflows/docker-compose.yml/badge.svg)](https://github.com/nurlicht/Java-Spring-Server/actions)
+# Containerized Web App [![](https://github.com/nurlicht/Java-Spring-Server/actions/workflows/docker-compose.yml/badge.svg)](https://github.com/nurlicht/Java-Spring-Server/actions)
 
 ### Goal
 Configuration and minimal code for a containerized web-app
