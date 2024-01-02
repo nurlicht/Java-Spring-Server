@@ -18,6 +18,10 @@ RUN mvn package -DskipTests
 FROM eclipse-temurin:21.0.1_12-jre-alpine
 WORKDIR /app
 
+# Install Curl
+RUN apk update && \
+    apk add --no-cache curl
+
 # Copy only the JAR file from the build stage
 COPY --from=build /app/target/demo-0.0.1-SNAPSHOT.jar .
 

@@ -1,4 +1,4 @@
-# Web Application with Containerized Infrastructure
+# Containerized Web App # Containerized Web App [![](https://github.com/nurlicht/Java-Spring-Server/actions/workflows/docker-compose.yml/badge.svg)](https://github.com/nurlicht/Java-Spring-Server/actions)
 
 ### Goal
 Configuration and minimal code for a containerized web-app
@@ -82,7 +82,7 @@ Configuration and minimal code for a containerized web-app
     - ```... com.example.demo.kafka.KafkaSubscriber   : Received value={"id":...,"name":"name0","publisher":"publisher0","isbn":"isbn0","language":"language0","authors":["author0a","author0b"]}.```
 
 ### Cleanup (at the very end and after all tests)
-1. Stop and delete the containers.
+1. Run the command ```docker-compose down```
 2. Run the command ```docker system prune --volumes --force```
 3. Exit DockerDesktop.
 4. Run the command ```wsl --shutdown```

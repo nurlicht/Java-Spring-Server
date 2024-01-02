@@ -71,11 +71,11 @@ services:
       kafka:
         condition: service_healthy
     healthcheck:
-      test: ['CMD-SHELL', 'curl -X POST "localhost:8080/api/book" -H "X-API-KEY: API-KEY-RAW" -H "Content-Type: application/json" -d "{\"name\":\"name0\", \"publisher\":\"publisher0\", \"isbn\":\"isbn0\", \"language\":\"language0\", \"authors\":[\"author0a\", \"author0b\"]}"']
-      interval: 5s
-      timeout: 2s
-      retries: 10
-      start_period: 0s
+      test: ["CMD-SHELL", "curl -X POST 'spring-app:8080/api/book' -H 'X-API-KEY: API-KEY-RAW' -H 'Content-Type: application/json' -d '{\"name\":\"name0\", \"publisher\":\"publisher0\", \"isbn\":\"isbn0\", \"language\":\"language0\", \"authors\":[\"author0a\", \"author0b\"]}'"]
+      interval: 10s
+      timeout: 5s
+      retries: 2
+      start_period: 40s
     environment:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/compose-postgres
       - SPRING_DATASOURCE_USERNAME=compose-postgres
@@ -85,6 +85,19 @@ services:
     networks:
       - docker-postgresql-network
       - docker-kafka-app-network
+      - docker-spring-client-network
+
+  # To test the spring-app
+  spring-app-client:
+    build:
+      context: ./
+      dockerfile: DockerfileEmpty
+    image: spring-app-client:v0.0.1
+    depends_on:
+      spring-app:
+        condition: service_healthy
+    networks:
+      - docker-spring-client-network
 
 networks:
   docker-kafka-app-network:
@@ -92,4 +105,6 @@ networks:
   docker-kafka-zookeeper-network:
     driver: bridge
   docker-postgresql-network:
+    driver: bridge
+  docker-spring-client-network:
     driver: bridge
