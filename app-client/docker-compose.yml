@@ -60,7 +60,7 @@ services:
 
   spring-app:
     build:
-      context: ./
+      context: ../
       dockerfile: Dockerfile
     image: spring-app:v0.0.1
     ports:
@@ -90,14 +90,15 @@ services:
   # To test the spring-app
   spring-app-client:
     build:
-      context: ./
-      dockerfile: DockerfileEmpty
+      context: .
+      dockerfile: Dockerfile
     image: spring-app-client:v0.0.1
     depends_on:
       spring-app:
         condition: service_healthy
     networks:
       - docker-spring-client-network
+    cpu_shares: 2
 
 networks:
   docker-kafka-app-network:

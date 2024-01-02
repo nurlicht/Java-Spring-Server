@@ -8,7 +8,7 @@ Configuration and minimal code for a containerized web-app
 - Framework: [Spring](https://spring.io/) (AI, Compose, Security, Kafka, MVC, Data)
 - Infrastructure: [Postgresql](https://www.postgresql.org/) (database) and [Apache Kafka](https://kafka.apache.org/) (streaming platform)
 - No service layer (delegation of HTTP calls to the persistence layer or other clients)
-- Automated end-to-end tests implemented as health-check of [containers](./docker-compose.yml) with a [GitHub-Action](./.github/workflows/docker-compose.yml)
+- Automated end-to-end tests implemented as health-check of [containers](./app-client/docker-compose.yml) with a [GitHub-Action](./.github/workflows/docker-compose.yml)
     - Expected result: ```Container java-spring-server-spring-app-1  Healthy```
 ```
  Container db  Starting
@@ -32,9 +32,9 @@ compose started
 
 ### Modes of Operation
 1. Complete containerization (infrastructure and Spring-app)
-    - Relevant docker-compose file: [docker-compose.yml](./docker-compose.yml)
+    - Relevant docker-compose file: [docker-compose.yml](./app-client/docker-compose.yml)
 2. Containerization of the infrastructure + local execution of the Spring-app
-    - Relevant docker-compose file: [docker-compose-infrastructure.yml](./docker-compose-infrastructure.yml)
+    - Relevant docker-compose file: [docker-compose-infrastructure.yml](./infrastructure/docker-compose-infrastructure.yml)
 
 ### Dependencies (only for local execution)
     - Java 21 (for Java 17, change the setting in [the build script](./pom.xml))
@@ -50,7 +50,7 @@ compose started
 2. Set ```spring.kafka.bootstrap-servers=localhost:9092``` in [application.properties](./src/main/resources/application.properties)
 3. Start [DockerDesktop](https://www.docker.com/products/docker-desktop/).
 4. Start the infrastructure (Postgresql):
-    - ```docker-compose -f docker-compose-infrastructure.yml up```
+    - ```docker-compose -f ./infrastructure/docker-compose-infrastructure.yml up```
     - Verify the correct start of the database. The log should show:
         - ...
         - ```listening on IPv4 address "0.0.0.0", port 5432```
@@ -69,7 +69,7 @@ compose started
     - For an independent Kafka subscriber
 2. Start [DockerDesktop](https://www.docker.com/products/docker-desktop/).
 3. Start the infrastructure (Postgresql):
-    - ```docker-compose up```
+    - ```docker-compose -f ./app-client/docker-compose.yml up```
 
 ### Tests (AI)
 1. Get an OpenAI API-key from [here](https://platform.openai.com/api-keys).
