@@ -8,9 +8,27 @@ Configuration and minimal code for a containerized web-app
 - Framework: [Spring](https://spring.io/) (AI, Compose, Security, Kafka, MVC, Data)
 - Infrastructure: [Postgresql](https://www.postgresql.org/) (database) and [Apache Kafka](https://kafka.apache.org/) (streaming platform)
 - No service layer (delegation of HTTP calls to the persistence layer or other clients)
-    - Several end-to-end tests (instead of unit- or integration-tests)
-        - Enforcing tests as health-check tests of [containers](./docker-compose.yml)
-        - Automatic start of containers with a [GitHub-Action](./.github/workflows/docker-compose.yml).
+- Automated end-to-end tests implemented as health-check of [containers](./docker-compose.yml) with a [GitHub-Action](./.github/workflows/docker-compose.yml)
+    - Expected result: ```Container java-spring-server-spring-app-1  Healthy```
+```
+ Container db  Starting
+ Container zookeeper  Starting
+ Container db  Started
+ Container zookeeper  Started
+ Container kafka  Starting
+ Container kafka  Started
+ Container db  Waiting
+ Container kafka  Waiting
+ Container db  Healthy
+ Container kafka  Healthy
+ Container java-spring-server-spring-app-1  Starting
+ Container java-spring-server-spring-app-1  Started
+ Container java-spring-server-spring-app-1  Waiting
+ Container java-spring-server-spring-app-1  Healthy
+ Container java-spring-server-spring-app-client-1  Starting
+ Container java-spring-server-spring-app-client-1  Started
+compose started
+```
 
 ### Modes of Operation
 1. Complete containerization (infrastructure and Spring-app)
@@ -86,6 +104,3 @@ Configuration and minimal code for a containerized web-app
 2. Run the command ```docker system prune --volumes --force```
 3. Exit DockerDesktop.
 4. Run the command ```wsl --shutdown```
-
-### Notes
-- The tests mentioned above have been used in the docker-compose files for health-check upon starting services. 
