@@ -5,7 +5,7 @@ Configuration and minimal code for a containerized web-app
 
 ### Main features
 - Language: [Java](https://jdk.java.net/21/)
-- Framework: [Spring](https://spring.io/) (AI, Compose, Security, Kafka, MVC, Data)
+- Framework: [Spring](https://spring.io/) (AI, Security, Kafka, GraphQL, MVC, Data, Compose)
 - Infrastructure: [Postgresql](https://www.postgresql.org/) (database) and [Apache Kafka](https://kafka.apache.org/) (streaming platform)
 - No service layer (delegation of HTTP calls to the persistence layer or other clients)
 - Automated end-to-end tests implemented as health-check of [containers](./app-client/docker-compose.yml) with a [GitHub-Action](./.github/workflows/docker-compose.yml)
@@ -99,8 +99,39 @@ compose started
     - ```... com.example.demo.kafka.KafkaPublisher    : Sending value=Book(id=..., name=name0, publisher=publisher0, isbn=isbn0, language=language0, authors=[author0a, author0b]) was completed.```
     - ```... com.example.demo.kafka.KafkaSubscriber   : Received value={"id":...,"name":"name0","publisher":"publisher0","isbn":"isbn0","language":"language0","authors":["author0a","author0b"]}.```
 
+### Tests (GraphQL)
+1. Use the embedded GraphQL GUI-client by opening ```http://localhost:8080/graphiql``` with a web-browser and then use the upper-left corner text-box to write your queries. Execute a query by pressing on the purple "Play" button:
+    - Mutation
+        ```
+        mutation CreateBook {
+            createBook(
+                name: "name1"
+                publisher: "publisher1"
+                isbn: "isbn1"
+                language: "language1"
+                authors: [
+                    "author1a"
+                    "author1b"
+                ]
+            ) {
+                id
+                authors
+            }
+        }
+        ```
+    - Query
+        ```
+        query GetBooksByLanguage {
+            getBooksByLanguage(language: "language1") {
+                id
+            }
+        }
+       ```
+2. Alternatively (instead of the GUI-client) contact the GraphQL-server directly:
+    - ```curl -X POST "localhost:8080/graphql" -H "Content-Type: application/json" -d "{\"query\": \"query GetBooksByLanguage {getBooksByLanguage(language: \\\"language1\\\") {id}}\"}"```
+
 ### Cleanup (at the very end and after all tests)
-1. Run the command ```docker-compose down```
+1. Stop all containers.
 2. Run the command ```docker system prune --volumes --force```
 3. Exit DockerDesktop.
 4. Run the command ```wsl --shutdown```

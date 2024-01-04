@@ -23,7 +23,10 @@ public class Config {
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity
             .csrf(CsrfConfigurer::disable)
-            .authorizeHttpRequests(x -> x.requestMatchers("/api/**").authenticated())
+            .authorizeHttpRequests(x -> x
+                .requestMatchers("/api/**").authenticated()
+                .requestMatchers("/graphql/**").permitAll()
+                .requestMatchers("/graphiql/**").permitAll())
             .httpBasic(x -> x.authenticationEntryPoint((req, res, exc) -> {}))
             .sessionManagement(x -> x.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .addFilterBefore(new CustomFilterBean(apiKeyEncrypted), UsernamePasswordAuthenticationFilter.class);
