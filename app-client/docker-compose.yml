@@ -71,10 +71,9 @@ services:
       kafka:
         condition: service_healthy
     healthcheck:
-      test: ["CMD-SHELL", "
-        curl -X POST 'spring-app:8080/api/book' -H 'X-API-KEY: API-KEY-RAW' -H 'Content-Type: application/json' -d '{\"name\":\"name0\", \"publisher\":\"publisher0\", \"isbn\":\"isbn0\", \"language\":\"language0\", \"authors\":[\"author0a\", \"author0b\"]}' && curl -X POST 'spring-app:8080/graphql' -H 'Content-Type: application/json' -d \"{\\\"query\\\": \\\"GetBooksByLanguage {getBooksByLanguage(language: \\\\\"language1\\\\\") {id}}\\\"}\""]
-      interval: 10s
-      timeout: 5s
+      test: ["CMD-SHELL", "/usr/local/bin/app-test.sh"]
+      interval: 12s
+      timeout: 10s
       retries: 6
       start_period: 40s
     environment:

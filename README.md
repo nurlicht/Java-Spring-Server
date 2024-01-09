@@ -8,7 +8,7 @@ Configuration and minimal code for a containerized web-app
 - Framework: [Spring](https://spring.io/) (AI, Security, Kafka, GraphQL, MVC, Data, Compose)
 - Infrastructure: [Postgresql](https://www.postgresql.org/) (database) and [Apache Kafka](https://kafka.apache.org/) (streaming platform)
 - No service layer (delegation of HTTP calls to the persistence layer or other clients)
-- Automated end-to-end tests implemented as health-check of [containers](./app-client/docker-compose.yml) with a [GitHub-Action](./.github/workflows/docker-compose.yml)
+- Automated [end-to-end tests](./e2e/app-test.sh) implemented as health-check of [containers](./app-client/docker-compose.yml) with a [GitHub-Action](./.github/workflows/docker-compose.yml)
     - Expected result: ```Container java-spring-server-spring-app-1  Healthy```
 ```
  Container db  Starting
@@ -37,8 +37,8 @@ compose started
     - Relevant docker-compose file: [docker-compose-infrastructure.yml](./infrastructure/docker-compose-infrastructure.yml)
 
 ### Dependencies (only for local execution)
-    - Java 21 (for Java 17, change the setting in [the build script](./pom.xml))
-    - Apache Maven 3.6.0
+- Java 21 (for Java 17, change the setting in [the build script](./pom.xml))
+- Apache Maven 3.6.0
 
 ### Execution (local)
 1. Launch 5 terminals (CLI):
@@ -84,7 +84,7 @@ compose started
 1. Use CLI of the db container to query the database content directly:
     - ```psql -U compose-postgres -c '\x' -c 'SELECT * FROM book;'```
 2. Use the API to create new database entries or fetch existing entries:
-    - ```curl -X GET   localhost:8080/api/books```
+    - ```curl -X GET -H "X-API-KEY: API-KEY-RAW" localhost:8080/api/books```
     - ```curl -X POST "localhost:8080/api/book" -H "X-API-KEY: API-KEY-RAW" -H "Content-Type: application/json" -d "{\"name\":\"name0\", \"publisher\":\"publisher0\", \"isbn\":\"isbn0\", \"language\":\"language0\", \"authors\":[\"author0a\", \"author0b\"]}"```
         - Replace <i>name0</i> and other values with appropriate ones.
 

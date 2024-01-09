@@ -25,5 +25,9 @@ RUN apk update && \
 # Copy only the JAR file from the build stage
 COPY --from=build /app/target/demo-0.0.1-SNAPSHOT.jar .
 
+# Copy script for later end-to-end tests
+COPY ./e2e/app-test.sh /usr/local/bin/
+RUN chmod +x /usr/local/bin/app-test.sh
+
 # Specify the command to run on container startup
 CMD ["java", "-jar", "demo-0.0.1-SNAPSHOT.jar"]
